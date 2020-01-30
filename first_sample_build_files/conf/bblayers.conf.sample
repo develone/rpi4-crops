@@ -6,12 +6,12 @@ BBPATH = "${TOPDIR}"
 BBFILES ?= ""
 
 BBLAYERS ?= " \
-  /work-yocto/rpi4-crops/sources/poky/meta \
-  /work-yocto/rpi4-crops/sources/poky/meta-poky \
-  /work-yocto/rpi4-crops/sources/poky/meta-yocto-bsp \
-  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-oe \
-  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-python \
-  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-multimedia \
-  /work-yocto/rpi4-crops/sources/meta-raspberrypi \
+  /work-cuteradio/rpi4-crops/sources/poky/meta \
+  /work-cuteradio/rpi4-crops/sources/poky/meta-poky \
+  /work-cuteradio/rpi4-crops/sources/poky/meta-yocto-bsp \
+  /work-cuteradio/rpi4-crops/sources/meta-openembedded/meta-oe \
+  /work-cuteradio/rpi4-crops/sources/meta-openembedded/meta-python \
+  /work-cuteradio/rpi4-crops/sources/meta-openembedded/meta-multimedia \
+  /work-cuteradio/rpi4-crops/sources/meta-raspberrypi \
 "
 
