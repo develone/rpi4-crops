@@ -1,0 +1,17 @@
+# POKY_BBLAYERS_CONF_VERSION is increased each time build/conf/bblayers.conf
+# changes incompatibly
+POKY_BBLAYERS_CONF_VERSION = "3"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS ?= " \
+  /work-yocto/rpi4-crops/sources/poky/meta \
+  /work-yocto/rpi4-crops/sources/poky/meta-poky \
+  /work-yocto/rpi4-crops/sources/poky/meta-yocto-bsp \
+  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-oe \
+  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-python \
+  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-multimedia \
+  /work-yocto/rpi4-crops/sources/meta-raspberrypi \
+"
+

@@ -1,0 +1,10 @@
+diff --git a/conf/machine/raspberrypi4.conf b/conf/machine/raspberrypi4.conf
+index 1bcf931..68edafa 100644
+--- a/conf/machine/raspberrypi4.conf
++++ b/conf/machine/raspberrypi4.conf
+@@ -18,3 +18,5 @@ SERIAL_CONSOLES ?= "115200;ttyS0"
+ 
+ VC4DTBO ?= "vc4-fkms-v3d"
+ ARMSTUB ?= "armstub7.bin"
++UART_ENABLE = "1"
++
