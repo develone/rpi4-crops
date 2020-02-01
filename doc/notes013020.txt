@@ -1,0 +1,200 @@
+replaced /home/vidal/work-cuteradio/rpi4-crops/sources
+with versions that were not from submodules.
+
+Build Configuration:
+BB_VERSION           = "1.44.0"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "ubuntu-16.04"
+TARGET_SYS           = "arm-poky-linux-gnueabi"
+MACHINE              = "raspberrypi4"
+DISTRO               = "poky"
+DISTRO_VERSION       = "3.0.1"
+TUNE_FEATURES        = "arm vfp cortexa7 neon vfpv4 thumb callconvention-hard"
+TARGET_FPU           = "hard"
+meta                 
+meta-poky            
+meta-yocto-bsp       = "zeus:da81542171f0cab0ea1a9bf45ac3c256e6f343f9"
+meta-oe              
+meta-python          
+meta-multimedia      = "zeus:aad5b3d070cd8c58828b0975cf861d8ebc90f460"
+meta-raspberrypi     = "master:3ae288aa38e3a1609c6e861918a874416d3f0f13"
+
+
+Built the raspberrypi4 image with yocto from source.
+
+ls -la core-image-sato-raspberrypi4.rpi-sdimg 
+lrwxrwxrwx 2 vidal vidal 60 Jan 31 15:35 core-image-sato-raspberrypi4.rpi-sdimg -> core-image-sato-raspberrypi4-20200131183103.rootfs.rpi-sdimg
+
+uname -a
+Linux mypi3-11 4.19.75-v7+ #1270 SMP Tue Sep 24 18:45:11 BST 2019 armv7l GNU/Linux
+gcc -v
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/arm-linux-gnueabihf/8/lto-wrapper
+Target: arm-linux-gnueabihf
+Configured with: ../src/configure -v --with-pkgversion='Raspbian 8.3.0-6+rpi1' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=arm-linux-gnueabihf- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-libitm --disable-libquadmath --disable-libquadmath-support --enable-plugin --with-system-zlib --with-target-system-zlib --enable-objc-gc=auto --enable-multiarch --disable-sjlj-exceptions --with-arch=armv6 --with-fpu=vfp --with-float=hard --disable-werror --enable-checking=release --build=arm-linux-gnueabihf --host=arm-linux-gnueabihf --target=arm-linux-gnueabihf
+Thread model: posix
+gcc version 8.3.0 (Raspbian 8.3.0-6+rpi1)
+
+verilator issue with no pod2man. Created /usr/bin/pod2man from mypi3-15 perl file.
+
+yosys provides needs blif & json files.
+Makefile
+-CXXFLAGS := $(CXXFLAGS) -Wall -Wextra -ggdb -I. -I"$(YOSYS_SRC)" -MD -D_YOSYS_ -fPIC -I$(PREFIX)/include
++CXXFLAGS := $(CXXFLAGS) -Wall -Wextra -ggdb -I/usr/include/tcl8.6/ -I. -I"$(YOSYS_SRC)" -MD -D_YOSYS_ -fPIC -I$(PREFIX)/include
+
+build needs python json for yosys
+
+build does not have wiring-pi.h and package ctags
+
+build needs python json for yosys
+
+gtkwave would be good for simulation
+
+meta-raspberrypi  4801ca  2020-01-29
+poky  18b6b2   2020-01-30
+meta-openembedded   463f9a  2020-01-28
+83%
+
+/dev/sda1      944788884 743489900 153283368  83% /
+
+vidal@ws009:~$ docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+crops/poky          ubuntu-16.04        5f7d297142a2        7 days ago          753MB
+zipcpu              0.62                cd6b5bb635da        10 days ago         10.5GB
+ubuntu              16.04               c6a43cd4801e        6 weeks ago         123MB
+ubuntu              xenial              c6a43cd4801e        6 weeks ago         123MB
+
+mkdir work-cuteradio
+
+cd work-cuteradio
+
+/home/vidal/work-cuteradio
+
+git clone --recurse-submodules https://github.com/bstubert/cuteradio.git
+
+git clone --recurse-submodules https://github.com/develone/rpi4-crops.git
+
+docker run --rm -it -v ${PWD}:/work-cuteradio crops/poky:ubuntu-16.04 --workdir=/work-cuteradio
+
+export TEMPLATECONF=${PWD}/cuteradio/sources/meta-cuteradio/custom && \
+   source ${PWD}/cuteradio/sources/poky/oe-init-build-env build
+
+export TEMPLATECONF=${PWD}/rpi4-crops/first_sample_build_files/conf
+pokyuser@70fa023b9ef0:/work-cuteradio$ echo $TEMPLATECONF
+/work-cuteradio/rpi4-crops/first_sample_build_files/conf
+
+source ${PWD}/rpi4-crops/sources/poky/oe-init-build-env build
+
+pokyuser@04da2f328383:/work-cuteradio$ source ${PWD}/rpi4-crops/sources/poky/oe-init-build-env build
+You had no conf/local.conf file. This configuration file has therefore been
+created for you with some default values. You may wish to edit it to, for
+example, select a different MACHINE (target hardware). See conf/local.conf
+for more information as common configuration options are commented.
+
+You had no conf/bblayers.conf file. This configuration file has therefore been
+created for you with some default values. To add additional metadata layers
+into your configuration please add entries to conf/bblayers.conf.
+
+The Yocto Project has extensive documentation about OE including a reference
+manual which can be found at:
+    http://yoctoproject.org/documentation
+
+For more information about OpenEmbedded see their website:
+    http://www.openembedded.org/
+
+# POKY_BBLAYERS_CONF_VERSION is increased each time build/conf/bblayers.conf
+# changes incompatibly
+POKY_BBLAYERS_CONF_VERSION = "3"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS ?= " \
+  /work-yocto/rpi4-crops/sources/poky/meta \
+  /work-yocto/rpi4-crops/sources/poky/meta-poky \
+  /work-yocto/rpi4-crops/sources/poky/meta-yocto-bsp \
+  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-oe \
+  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-python \
+  /work-yocto/rpi4-crops/sources/meta-openembedded/meta-multimedia \
+  /work-yocto/rpi4-crops/sources/meta-raspberrypi \
+"
+
+# POKY_BBLAYERS_CONF_VERSION is increased each time build/conf/bblayers.conf
+# changes incompatibly
+POKY_BBLAYERS_CONF_VERSION = "3"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS ?= " \
+  /work-cuteradio/rpi4-crops/sources/poky/meta \
+  /work-cuteradio/rpi4-crops/sources/poky/meta-poky \
+  /work-cuteradio/rpi4-crops/sources/poky/meta-yocto-bsp \
+  /work-cuteradio/rpi4-crops/sources/meta-openembedded/meta-oe \
+  /work-cuteradio/rpi4-crops/sources/meta-openembedded/meta-python \
+  /work-cuteradio/rpi4-crops/sources/meta-openembedded/meta-multimedia \
+  /work-cuteradio/rpi4-crops/sources/meta-raspberrypi \
+"
+
+pokyuser@04da2f328383:/work-cuteradio/build$ du -s ../downloads/
+21352408	../downloads/
+
+vidal@ws009:~/work-cuteradio$ cd rpi4-crops/sources/meta-raspberrypi/conf/machine/
+
+vidal@ws009:~/work-cuteradio/rpi4-crops/sources/meta-raspberrypi/conf/machine$ cp ../../../../patch-to-meta-raspberrypi/rpi4/patchfile .
+
+vidal@ws009:~/work-cuteradio/rpi4-crops/sources/meta-raspberrypi/conf/machine$ patch --verbose --dry-run < patchfile 
+Hmm...  Looks like a unified diff to me...
+The text leading up to this was:
+--------------------------
+|diff --git a/conf/machine/raspberrypi4.conf b/conf/machine/raspberrypi4.conf
+|index 1bcf931..68edafa 100644
+|--- a/conf/machine/raspberrypi4.conf
+|+++ b/conf/machine/raspberrypi4.conf
+--------------------------
+checking file raspberrypi4.conf
+Using Plan A...
+Hunk #1 succeeded at 18.
+done
+vidal@ws009:~/work-cuteradio/rpi4-crops/sources/meta-raspberrypi/conf/machine$ patch --verbose  < patchfile 
+Hmm...  Looks like a unified diff to me...
+The text leading up to this was:
+--------------------------
+|diff --git a/conf/machine/raspberrypi4.conf b/conf/machine/raspberrypi4.conf
+|index 1bcf931..68edafa 100644
+|--- a/conf/machine/raspberrypi4.conf
+|+++ b/conf/machine/raspberrypi4.conf
+--------------------------
+patching file raspberrypi4.conf
+Using Plan A...
+Hunk #1 succeeded at 18.
+done
+vidal@ws009:~/work-cuteradio/rpi4-crops/sources/meta-raspberrypi/conf/machine$ git diff
+diff --git a/conf/machine/raspberrypi4.conf b/conf/machine/raspberrypi4.conf
+index 1bcf931..68edafa 100644
+--- a/conf/machine/raspberrypi4.conf
++++ b/conf/machine/raspberrypi4.conf
+@@ -18,3 +18,5 @@ SERIAL_CONSOLES ?= "115200;ttyS0"
+ 
+ VC4DTBO ?= "vc4-fkms-v3d"
+ ARMSTUB ?= "armstub7.bin"
++UART_ENABLE = "1"
++
+
+14:25
+pokyuser@04da2f328383:/work-cuteradio/build$ bitbake core-image-sato
+16:25	51%
+18:23	99%
+vidal@ws009:~/work-cuteradio$ ls
+build  downloads  rpi4-crops  sstate-cache
+
+vidal@ws009:~/work-cuteradio/build/tmp/deploy/images/raspberrypi4$ ls -la core-image-sato-raspberrypi4.rpi-sdimg 
+lrwxrwxrwx 2 vidal vidal 60 Jan 30 18:26 core-image-sato-raspberrypi4.rpi-sdimg -> core-image-sato-raspberrypi4-20200130212539.rootfs.rpi-sdimg
+vidal@ws009:~/work-cuteradio/build/tmp/deploy/images/raspberrypi4$ sudo dd bs=16M if=core-image-sato-raspberrypi4.rpi-sdimg status='progress' of=/dev/sdb
+2516582400 bytes (2.5 GB, 2.3 GiB) copied, 3.07431 s, 819 MB/s
+151+1 records in
+151+1 records out
+2541748224 bytes (2.5 GB, 2.4 GiB) copied, 38.7489 s, 65.6 MB/s
+vidal@ws009:~/work-cuteradio/build/tmp/deploy/images/raspberrypi4$ sudo sync
+sudo gparted
