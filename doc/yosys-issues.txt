@@ -1,0 +1,105 @@
+Trying to install the following software 
+(icestorm, nextpnr, yosys, autofpga, verilator, zipcpu, gtkwave and catzip) on a
+yocto built raspberrypi4.
+
+Issue 1.  On yocto raspberrypi4 system yosys build could not find tcl.h
+find / -name tcl.h
+/usr/include/tcl8.6.9/generic/tcl.h
+/usr/include/tcl8.6/tcl.h
+md5sum /usr/include/tcl8.6/tcl.h 
+32c607b599db797f8cda8e404e4d1fd1  /usr/include/tcl8.6/tcl.h
+
+I modified the Makefile
+
+raspberrypi4:~/yosys$ git diff Makefile
+diff --git a/Makefile b/Makefile
+index fd95219e..11a67b0c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -73,7 +73,7 @@ all: top-all
+ YOSYS_SRC := $(dir $(firstword $(MAKEFILE_LIST)))
+ VPATH := $(YOSYS_SRC)
+ 
+-CXXFLAGS := $(CXXFLAGS) -Wall -Wextra -ggdb -I. -I"$(YOSYS_SRC)" -MD -D_YOSYS_ -fPIC -I$(PREFIX)/include
++CXXFLAGS := $(CXXFLAGS) -Wall -Wextra -ggdb -I/usr/include/tcl8.6/ -I. -I"$(YOSYS_SRC)" -MD -D_YOSYS_ -fPIC -I$(PREFIX)/include
+ LDFLAGS := $(LDFLAGS) -L$(LIBDIR)
+ LDLIBS := $(LDLIBS) -lstdc++ -lm
+ PLUGIN_LDFLAGS :=
+ 
+Issue 2.  On yocto raspberrypi4 system python-json was not installed.
+python3-ujson is Ultra fast JSON encoder and decoder for Python
+UltraJSON is an ultra fast JSON encoder and decoder written in pure C with bindings for Python.
+
+I was able to get python3-ujson_1.35-r0_armhf.deb installed and with 
+With minor changes to techlibs/common/cellhelp.py 
+git diff techlibs/common/cellhelp.py 
+diff --git a/techlibs/common/cellhelp.py b/techlibs/common/cellhelp.py
+index 5c44cb80..7116a132 100644
+--- a/techlibs/common/cellhelp.py
++++ b/techlibs/common/cellhelp.py
+@@ -1,7 +1,7 @@
+ #!/usr/bin/env python3
+ 
+ import fileinput
+-import json
++import ujson
+ 
+ current_help_msg = []
+ current_module_code = []
+@@ -9,8 +9,8 @@ current_module_name = None
+ current_module_signature = None
+ 
+ def print_current_cell():
+-    print("cell_help[\"%s\"] = %s;" % (current_module_name, "\n".join([json.dumps(line) for line in current_help_msg])))
+-    print("cell_code[\"%s+\"] = %s;" % (current_module_name, "\n".join([json.dumps(line) for line in current_module_code])))
++    print("cell_help[\"%s\"] = %s;" % (current_module_name, "\n".join([ujson.dumps(line) for line in current_help_msg])))
++    print("cell_code[\"%s+\"] = %s;" % (current_module_name, "\n".join([ujson.dumps(line) for line in current_module_code])))
+ 
+ for line in fileinput.input():
+     if line.startswith("//-"):
+     
+make config-gcc
+make -j$(proc)
+
+[  1%] Building kernel/rtlil.o
+[  1%] Building kernel/log.o
+[  2%] Building kernel/calc.o
+[  2%] Building kernel/yosys.o
+[  3%] Building kernel/cellaigs.o
+
+[ 94%] ABC: `` Building binary: abc-144c5be
+raspberrypi4:~/yosys$ ls
+Brewfile       CodingReadme   README.md  frontends  misc      tests
+CHANGELOG      Dockerfile     abc	 kernel     passes    yosys-config
+COPYING        Makefile       backends	 libs	    share     yosys-smtbmc
+CodeOfConduct  Makefile.conf  examples	 manual     techlibs
+Feb  2 07:32 Makefile.conf
+Sun Feb  2 08:30:26 UTC 2020
+
+raspberrypi4:~/yosys$ make test
+[Makefile.conf] CONFIG := gcc
+[100%] Building yosys
+/usr/lib/gcc/arm-poky-linux-gnueabi/9.2.0/../../../../arm-poky-linux-gnueabi/bin/ld: cannot find -ltclstub8.6
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:614: yosys] Error 1
+
+Starting with a catzip.blif & catzip.json
+/home/devel/catzip/rtl/catzip
+
+make cpudefs.h
+make design.h
+make verilated
+make bin
+
+This test icepack, icetime, and nextpnr-ice40
+
+Info: [ 22407,  23185) |************************************************************ 
+Info: [ 23185,  23963) |***********************************+
+3 warnings, 0 errors
+icepack catzip.asc catzip.bin
+icetime -d hx8k -c 40 catzip.asc
+// Reading input .asc file..
+// Reading 8k chipdb file..
+// Creating timing netlist..
+// Timing estimate: 16.80 ns (59.53 MHz)
+// Checking 25.00 ns (40.00 MHz) clock constraint: PASSED.
