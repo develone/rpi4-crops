@@ -1,5 +1,5 @@
 Trying to install the following software 
-(icestorm, nextpnr, yosys, autofpga, verilator, zipcpu, gtkwave and catzip) on a
+(icestorm, nextpnr, yosys, autofpga, verilator, zipcpu, and catzip) on a
 yocto built raspberrypi4.
 
 Issue 1.  On yocto raspberrypi4 system yosys build could not find tcl.h
@@ -59,22 +59,51 @@ index 5c44cb80..7116a132 100644
      if line.startswith("//-"):
      
 make config-gcc
-make -j$(proc)
-
+raspberrypi4:~/yosys$ make -j$(nproc)
+[Makefile.conf] CONFIG := gcc
+[  0%] Building kernel/version_823a08e0.cc
+[  0%] Building kernel/driver.o
+[  0%] Building techlibs/common/simlib_help.inc
+[  0%] Building techlibs/common/simcells_help.inc
 [  1%] Building kernel/rtlil.o
 [  1%] Building kernel/log.o
 [  2%] Building kernel/calc.o
 [  2%] Building kernel/yosys.o
-[  3%] Building kernel/cellaigs.o
 
+[ 94%] ABC: `` Compiling: /src/bdd/llb/llb4Sweep.c
 [ 94%] ABC: `` Building binary: abc-144c5be
-raspberrypi4:~/yosys$ ls
-Brewfile       CodingReadme   README.md  frontends  misc      tests
-CHANGELOG      Dockerfile     abc	 kernel     passes    yosys-config
-COPYING        Makefile       backends	 libs	    share     yosys-smtbmc
-CodeOfConduct  Makefile.conf  examples	 manual     techlibs
-Feb  2 07:32 Makefile.conf
-Sun Feb  2 08:30:26 UTC 2020
+[100%] Building yosys-abc
+
+  Build successful.
+  
+Sun Feb  2 12:06:35 UTC 2020
+Sun Feb  2 13:03:19 UTC 2020
+
+Testing before installing yosys
+
+#!/bin/bash
+export PATH=/home/devel/yosys:/usr/local/share/zipcpu/sw/install/cross-tools/bin:$PATH
+echo $PATH
+
+catzip/rtl/catzip 
+
+make clean
+
+make 
+
+Info: [ 20090,  20863) |***************************************************+
+Info: [ 20863,  21636) |*****************************************+
+Info: [ 21636,  22409) |***********************************************************+
+Info: [ 22409,  23182) |************************************************************ 
+Info: [ 23182,  23955) |*************************************+
+3 warnings, 0 errors
+icepack catzip.asc catzip.bin
+icetime -d hx8k -c 40 catzip.asc
+// Reading input .asc file..
+// Reading 8k chipdb file..
+// Creating timing netlist..
+// Timing estimate: 16.29 ns (61.37 MHz)
+// Checking 25.00 ns (40.00 MHz) clock constraint: PASSED.
 
 raspberrypi4:~/yosys$ make test
 [Makefile.conf] CONFIG := gcc
@@ -82,6 +111,16 @@ raspberrypi4:~/yosys$ make test
 /usr/lib/gcc/arm-poky-linux-gnueabi/9.2.0/../../../../arm-poky-linux-gnueabi/bin/ld: cannot find -ltclstub8.6
 collect2: error: ld returned 1 exit status
 make: *** [Makefile:614: yosys] Error 1
+
+Transferred from yocto build system 
+vidal@ws009:~/work-cuteradio/build/tmp/sysroots-components$ scp ./cortexa7t2hf-neon-vfpv4/tcl/usr/lib/libtclstub8.6.a devel@raspberrypi4:~/
+
+root@raspberrypi4:~# find / -name libtclstub8.6.a
+/home/devel/libtclstub8.6.a
+root@raspberrypi4:~# cp /home/devel/libtclstub8.6.a /usr/lib/
+root@raspberrypi4:~# find / -name libtclstub8.6.a
+/home/devel/libtclstub8.6.a
+/usr/lib/libtclstub8.6.a
 
 Starting with a catzip.blif & catzip.json
 /home/devel/catzip/rtl/catzip

@@ -45,7 +45,8 @@ minicom linux-firmware iputils yasm \
 texinfo python-imaging libmtp python-pip openjpeg \
 v4l-utils gsl opencv libftdi  \
 chkconfig openjpeg lame liba52 gtkmm \
-gnuplot ghostscript boost \
+gnuplot ghostscript boost python3 python3-ujson \
+hexedit graphviz \
 "
 
 
