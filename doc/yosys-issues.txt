@@ -122,6 +122,10 @@ root@raspberrypi4:~# find / -name libtclstub8.6.a
 /home/devel/libtclstub8.6.a
 /usr/lib/libtclstub8.6.a
 
+Adding to the local.conf file to include staticdev-pkgs
+
+-EXTRA_IMAGE_FEATURES ?= "debug-tweaks dev-pkgs tools-sdk doc-pkgs"
++EXTRA_IMAGE_FEATURES ?= "debug-tweaks dev-pkgs tools-sdk doc-pkgs staticdev-pkgs"
 Starting with a catzip.blif & catzip.json
 /home/devel/catzip/rtl/catzip
 
